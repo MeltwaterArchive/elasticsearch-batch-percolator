@@ -1,0 +1,124 @@
+Elasticsearch batch percolator
+============================
+
+The batch percolator is a fork of the official elasticsearch [percolator](https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/percolate.html). 
+It's highly optimized for large volume percolation with complex Lucene queries like wildcards, spans and phrases.
+
+Using the official multi percolator we were able to reach ~1 document/second with 100.000 registered queries. With the batch-percolator, we are currently
+handling ~3000 documents/second with 225.000 registered queries. However, this will differ greatly depending on the 
+nature of you queries and if you have an efficient strategy for filtering out queries.
+
+For more information, see the blog post (TODO)
+
+## Installation
+
+    bin/plugin -u https://bintray.com/artifact/download/bergetp/elasticsearch-batch-percolator/com/meltwater/elasticsearch-batch-percolator/1.0/elasticsearch-batch-percolator-1.0.zip -install elasticsearch-batch-percolator
+
+Version matrix:
+
+    ┌─────────────────────────────────────────┬──────────────────────────┐
+    │ Elasticsearch batch percolator          │ ElasticSearch            │
+    ├─────────────────────────────────────────┼──────────────────────────┤
+    │ 1.0.x                                   │ 1.7.0 ─► 1.7.1           │
+    └─────────────────────────────────────────┴──────────────────────────┘
+
+## API documentations
+
+### Registration of queries
+    curl localhost:9200/index/.batchpercolator/query1
+    {
+      "query": {
+        "term": {
+          "field1": "fox"
+        }
+      },
+      "highlight": {
+        "pre_tags": [
+          "<b>"
+        ],
+        "post_tags": [
+          "</b>"
+        ],
+        "fields": {
+          "field1": {}
+        }
+      }
+    }
+
+
+### Sending in documents
+
+    curl localhost:9200/index/type/_batchpercolate
+    {
+      "docs": [
+        {
+          "_id": "doc1",
+          "field1": "the fox is here",
+          "field2": "meltwater"
+        },
+        {
+          "_id": "doc2",
+          "field1": "the fox is not here",
+          "field2": "percolator"
+        }
+      ]
+    }
+   
+example response:
+
+    {
+      "took": 23,
+      "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+      },
+      "results": [
+        {
+          "doc": "doc1",
+          "matches": [
+            {
+              "query_id": "query1",
+              "highlights": {
+                "field1": [
+                  "the <b>fox</b> is here"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+    
+
+## How does it differ from the official (multi) percolator?
+### Batching of documents
+The official multi-percolator uses a 'MemoryIndex' which is a highly optimized index often used for percolation. The downside with the MemoryIndex is that it can
+only hold one document at a time. 
+ 
+The batch percolator instead uses a RamDirectory which means that we can process documents in batches.
+
+### Two-phase query execution
+Complex queries like Span, Phrase and especially MultiPhraseQueries are magnitudes slower than Term or Boolean queries. All complex queries can be
+approximated using cheaper queries (for example, a SpanNear can be approximated using an AND query).
+
+In the batch-percolator, a simplified approximation of each query is first executed on the batch of documents. We only execute the original expensive
+query if the approximated query has any matches in the batch. This is similar to how Lucene 5 executes those queries,
+and we expect to phase out this step once Elasticsearch 2.0 has a stable release.
+
+### Less features
+We've removed a lot of features from the official multi-percolator. This means that you can no longer use filter queries or
+aggregations on matching queries. You should consider this plugin to be 'vanilla percolation'.  Some of the features 
+were removed because they cannot be supported in batch-mode. Some have been removed to reduce the complexity of 
+the code.
+
+
+
+
+
+
+
+
+
+
+

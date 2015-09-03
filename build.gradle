@@ -1,0 +1,75 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'com.meltwater'
+version = project_version
+sourceCompatibility = 1.7
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2"
+    }
+}
+
+
+task pluginZipFile(type: Zip){
+    from(project.configurations.compile.filter {
+        //Do not include elasticsearch dependencies
+        it.getName().startsWith('meltwater-elasticsearch-queries')
+    })
+    from(project.jar)
+}
+
+build.dependsOn pluginZipFile
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts{
+    archives javadocJar, sourcesJar, jar, pluginZipFile.archivePath
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    configurations = ['archives']
+    pkg {
+        repo = 'elasticsearch-batch-percolator'
+        name = 'elasticsearch-batch-percolator'
+        userOrg = user
+        licenses = ['Apache 2.0']
+        vcsUrl = 'git@github.com:meltwater/elasticsearch-batch-percolator.git'
+        version {
+            name = project.version
+            desc = 'Elasticsearch batch percolator'
+        }
+    }
+}
+
+test{
+    jvmArgs '-Xmx1G', '-XX:MaxPermSize=512M', '-XX:-UseSplitVerifier'
+}
+
+
+dependencies {
+    compile 'org.elasticsearch:elasticsearch:1.7.1'
+    compile 'com.meltwater:meltwater-elasticsearch-queries:1.0'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testCompile 'com.ning:async-http-client:1.9.31'
+    testCompile 'io.netty:netty:3.10.4.Final'
+}

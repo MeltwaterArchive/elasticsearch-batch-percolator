@@ -1,0 +1,21 @@
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!-- Reference: http://logback.qos.ch/manual/appenders.html -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache"   level="WARN"/>
+    <logger name="org"          level="INFO"/>
+
+    <logger name="com.meltwater.fairhair.storage.es" level="INFO"/>
+    <logger name="com.meltwater.docpipe"             level="INFO"/>
+    <logger name="com.meltwater.reporting"           level="INFO"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
