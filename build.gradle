@@ -9,6 +9,9 @@ group = 'com.meltwater'
 version = project_version
 sourceCompatibility = 1.7
 
+repositories{
+    jcenter()
+}
 buildscript {
     repositories {
         jcenter()
