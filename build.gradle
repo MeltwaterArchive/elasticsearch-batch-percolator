@@ -77,7 +77,7 @@ test{
 
 dependencies {
     compile 'org.elasticsearch:elasticsearch:1.7.1'
-    compile 'com.meltwater:meltwater-elasticsearch-queries:1.0'
+    compile 'com.meltwater:meltwater-elasticsearch-queries:1.1.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
