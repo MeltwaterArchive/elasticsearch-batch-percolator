@@ -5,14 +5,14 @@ The batch percolator is a fork of the official elasticsearch [percolator](https:
 It's highly optimized for large volume percolation with complex Lucene queries like wildcards, spans and phrases.
 
 Using the official multi percolator we were able to reach ~1 document/second with 100.000 registered queries. With the batch-percolator, we are currently
-handling ~3000 documents/second with 225.000 registered queries. However, this will differ greatly depending on the 
+handling ~1000 documents/second with 225.000 registered queries. However, this will differ greatly depending on the 
 nature of you queries and if you have an efficient strategy for filtering out queries.
 
 For more information, see the blog post (TODO)
 
 ## Installation
 
-    bin/plugin -u https://bintray.com/artifact/download/bergetp/elasticsearch-batch-percolator/com/meltwater/elasticsearch-batch-percolator/1.0/elasticsearch-batch-percolator-1.0.zip -install elasticsearch-batch-percolator
+    elasticsearch/bin/plugin -u file:///{path-to-repo}/elasticsearch-batch-percolator/artifact/elasticsearch-batch-percolator-1.0.1.zip --install elasticsearch-batch-percolator
 
 Version matrix:
 
@@ -21,6 +21,7 @@ Version matrix:
     ├─────────────────────────────────────────┼──────────────────────────┤
     │ 1.0.x                                   │ 1.7.0 ─► 1.7.1           │
     └─────────────────────────────────────────┴──────────────────────────┘
+
 
 ## API documentations
 
@@ -111,6 +112,11 @@ We've removed a lot of features from the official multi-percolator. This means t
 aggregations on matching queries. You should consider this plugin to be 'vanilla percolation'.  Some of the features 
 were removed because they cannot be supported in batch-mode. Some have been removed to reduce the complexity of 
 the code.
+
+## Release
+The project is hosted at jCenter and builds are uploaded by our Jenkins server. If you are a project maintainer with the necessary credentials, you can build a release locally by running:
+
+    ./gradlew clean build bintray
 
 
 

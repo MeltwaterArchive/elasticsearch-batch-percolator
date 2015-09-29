@@ -30,7 +30,18 @@ task pluginZipFile(type: Zip){
     from(project.jar)
 }
 
-build.dependsOn pluginZipFile
+task deleteOldZip(type: Delete) {
+    dependsOn pluginZipFile
+    delete 'artifact'
+}
+
+task copyZipToFolder(type: Copy){
+    dependsOn deleteOldZip
+    from pluginZipFile
+    into 'artifact'
+}
+
+build.dependsOn copyZipToFolder
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -60,7 +71,7 @@ bintray {
     pkg {
         repo = 'elasticsearch-batch-percolator'
         name = 'elasticsearch-batch-percolator'
-        userOrg = user
+        userOrg =    user
         licenses = ['Apache 2.0']
         vcsUrl = 'git@github.com:meltwater/elasticsearch-batch-percolator.git'
         version {
