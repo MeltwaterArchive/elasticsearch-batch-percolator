@@ -8,7 +8,7 @@ Using the official multi percolator we were able to reach ~1 document/second wit
 handling ~1000 documents/second with 225.000 registered queries. However, this will differ greatly depending on the 
 nature of you queries and if you have an efficient strategy for filtering out queries.
 
-For more information, see the blog post (TODO)
+For more information, see [this blog post](http://underthehood.meltwater.com/blog/2015/09/29/batch-percolator/).
 
 ## Installation
 
