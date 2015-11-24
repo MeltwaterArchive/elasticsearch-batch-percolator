@@ -25,9 +25,32 @@ Version matrix:
 
 ## API documentations
 
+### Create index with mapping
+
+    curl -XPUT localhost:9200/index -d '{
+      "mappings": {
+        "type": {
+          "_source": {
+            "enabled": false
+          },
+          "properties": {
+            "field1": {
+              "type": "string",
+              "index": "analyzed"
+            },
+            "field2": {
+              "type": "string",
+              "index": "analyzed"
+            }
+          }
+        }
+      }
+    }'
+
+You could also use a template, or store a document to get dynamic mapping for the document type to percolate agains
+
 ### Registration of queries
-    curl localhost:9200/index/.batchpercolator/query1
-    {
+    curl -XPOST localhost:9200/index/.batchpercolator/query1 -d '{
       "query": {
         "term": {
           "field1": "fox"
@@ -44,13 +67,12 @@ Version matrix:
           "field1": {}
         }
       }
-    }
+    }'
 
 
 ### Sending in documents
 
-    curl localhost:9200/index/type/_batchpercolate
-    {
+    curl -XPOST localhost:9200/index/type/_batchpercolate -d '{
       "docs": [
         {
           "_id": "doc1",
@@ -63,7 +85,7 @@ Version matrix:
           "field2": "percolator"
         }
       ]
-    }
+    }'
    
 example response:
 
