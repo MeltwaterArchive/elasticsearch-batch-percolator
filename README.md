@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/meltwater/elasticsearch-batch-percolator.svg?branch=master)](https://travis-ci.org/meltwater/elasticsearch-batch-percolator)
+
 Elasticsearch batch percolator
 ============================
 
