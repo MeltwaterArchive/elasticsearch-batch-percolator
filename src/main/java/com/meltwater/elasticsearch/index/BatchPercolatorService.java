@@ -174,9 +174,17 @@ public class BatchPercolatorService extends AbstractComponent {
 
         try(DirectoryReader reader = DirectoryReader.open(directory)){
             for(Map.Entry<String, QueryAndSource> entry:percolateQueries.entrySet()){
-                if(hasDocumentMatchingFilter(reader, entry.getValue().getLimitingFilter())){
+                try{
+                    if(hasDocumentMatchingFilter(reader, entry.getValue().getLimitingFilter())){
+                        filteredQueries.put(entry.getKey(), entry.getValue());
+                    }
+                } catch (Exception e){
+                    logger.warn(
+                            "Failed to pre-filter query. Assuming that it should be matched anyway. Query ID: {}, Filter: {}",
+                            e, entry.getKey(), entry.getValue().getLimitingFilter());
                     filteredQueries.put(entry.getKey(), entry.getValue());
                 }
+
             }
         }
         return filteredQueries;
@@ -327,13 +335,20 @@ public class BatchPercolatorService extends AbstractComponent {
         }
 
         for (Map.Entry<String, QueryAndSource> entry : percolateQueries.entrySet()) {
-            executeSearch(context, entry.getValue());
-            for (SearchHit searchHit  : context.fetchResult().hits()) {
-                String id = searchHit.getId();
-                BatchPercolateResponseItem batchPercolateResponseItem = responses.get(id);
+            try{
+                executeSearch(context, entry.getValue());
+                for (SearchHit searchHit  : context.fetchResult().hits()) {
+                    String id = searchHit.getId();
+                    BatchPercolateResponseItem batchPercolateResponseItem = responses.get(id);
 
-                QueryMatch queryMatch = getQueryMatch(entry, searchHit);
-                batchPercolateResponseItem.getMatches().put(queryMatch.getQueryId(), queryMatch);
+                    QueryMatch queryMatch = getQueryMatch(entry, searchHit);
+                    batchPercolateResponseItem.getMatches().put(queryMatch.getQueryId(), queryMatch);
+                }
+            }
+            catch (Exception e){
+                logger.warn(
+                        "Failed to execute query. Will not add it to matches. Query ID: {}, Query: {}",
+                        e, entry.getKey(), entry.getValue().getQuery());
             }
         }
 

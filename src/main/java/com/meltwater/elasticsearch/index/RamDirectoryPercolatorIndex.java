@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Indexes {@link org.elasticsearch.index.mapper.ParsedDocument}s into
- * a {@link org.apache.lucene.store.RAMDirectory}
+ * Indexes {@link ParsedDocument}s into
+ * a {@link RAMDirectory}
  */
 public class RamDirectoryPercolatorIndex {
 
