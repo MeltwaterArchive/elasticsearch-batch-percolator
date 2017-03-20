@@ -35,6 +35,7 @@ import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.node.Node;
+import org.elasticsearch.node.internal.InternalSettingsPreparer;
 import org.elasticsearch.search.highlight.HighlightBuilder;
 
 import java.io.File;
@@ -66,6 +67,8 @@ public abstract class AbstractNodesTests {
             .settingsBuilder()
             .put("path.data", BASE_DIR)
             .put("cluster.name", "test-cluster-" + NetworkUtils.getLocalAddress().getHostName())
+            .put(InternalSettingsPreparer.IGNORE_SYSTEM_PROPERTIES_SETTING, true)
+            .put("node.mode", "local")
             .build();
 
     public void putDefaultSettings(Settings.Builder settings) {
