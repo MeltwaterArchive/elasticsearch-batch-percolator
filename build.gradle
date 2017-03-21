@@ -109,7 +109,7 @@ bintray {
         repo = 'opensource'
         name = 'elasticsearch-batch-percolator'
         userOrg = 'meltwater'
-        licenses = ['MIT']
+        licenses = ['Apache 2.0']
         vcsUrl = "https://github.com/meltwater/${project.name}"
         version {
             gpg{
