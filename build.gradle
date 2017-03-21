@@ -16,20 +16,20 @@ project.group = 'com.meltwater'
 
 repositories{
     jcenter()
+    mavenLocal()
+    if (getenv('MAVEN_URL')!=null) {
+        maven {
+            credentials {
+                username getenv('MAVEN_USER')
+                password getenv('MAVEN_PASSWORD')
+            }
+            url getenv('MAVEN_URL')
+        }
+    }
 }
 buildscript {
     repositories {
         jcenter()
-        mavenLocal()
-        if (getenv('MAVEN_URL')!=null) {
-            maven {
-                credentials {
-                    username getenv('MAVEN_USER')
-                    password getenv('MAVEN_PASSWORD')
-                }
-                url getenv('MAVEN_URL')
-            }
-        }
     }
     dependencies {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7"
