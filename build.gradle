@@ -1,13 +1,18 @@
 import org.apache.tools.ant.filters.ReplaceTokens
+
+import static java.lang.System.getenv
+
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
-apply plugin: 'maven-publish'
+apply plugin: "maven-publish"
 apply plugin: 'com.jfrog.bintray'
 
 group = 'com.meltwater'
 version = project_version
 sourceCompatibility = 1.7
+
+project.group = 'com.meltwater'
 
 repositories{
     jcenter()
@@ -15,76 +20,21 @@ repositories{
 buildscript {
     repositories {
         jcenter()
-    }
-    dependencies {
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2"
-    }
-}
-
-
-task pluginZipFile(type: Zip){
-    from(project.configurations.compile.filter {
-        //Do not include elasticsearch dependencies
-        it.getName().startsWith('meltwater-elasticsearch-queries')
-    })
-    from(project.jar)
-}
-
-task deleteOldZip(type: Delete) {
-    dependsOn pluginZipFile
-    delete 'artifact'
-}
-
-task copyZipToFolder(type: Copy){
-    dependsOn deleteOldZip
-    from pluginZipFile
-    into 'artifact'
-}
-
-build.dependsOn copyZipToFolder
-
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts{
-    archives javadocJar, sourcesJar, jar, pluginZipFile.archivePath
-}
-
-processResources {
-    filesMatching('*.properties') {
-        filter ReplaceTokens, tokens: [ 'plugin.version': project.version ]
-
-    }
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    configurations = ['archives']
-    pkg {
-        repo = 'elasticsearch-batch-percolator'
-        name = 'elasticsearch-batch-percolator'
-        userOrg =    user
-        licenses = ['Apache 2.0']
-        vcsUrl = 'git@github.com:meltwater/elasticsearch-batch-percolator.git'
-        version {
-            name = project.version
-            desc = 'Elasticsearch batch percolator'
+        mavenLocal()
+        if (getenv('MAVEN_URL')!=null) {
+            maven {
+                credentials {
+                    username getenv('MAVEN_USER')
+                    password getenv('MAVEN_PASSWORD')
+                }
+                url getenv('MAVEN_URL')
+            }
         }
     }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7"
+    }
 }
-
-test{
-    jvmArgs '-Xmx1G', '-XX:MaxPermSize=512M', '-XX:-UseSplitVerifier'
-}
-
 
 dependencies {
     compile 'org.elasticsearch:elasticsearch:1.7.1'
@@ -98,3 +48,86 @@ dependencies {
     testCompile 'org.slf4j:slf4j-simple:1.7.25'
 
 }
+
+
+task pluginZipFile(type: Zip){
+    from(project.configurations.compile.filter {
+        //Do not include elasticsearch dependencies
+        it.getName().startsWith('meltwater-elasticsearch-queries')
+    })
+    from(project.jar)
+}
+
+build.dependsOn pluginZipFile
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier "sources"
+}
+
+processResources {
+    filesMatching('*.properties') {
+        filter ReplaceTokens, tokens: [ 'plugin.version': project.version ]
+
+    }
+}
+
+publishing {
+    publications {
+        JavaArtifacts(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            artifact javadocJar
+            artifact pluginZipFile.archivePath
+            groupId project.group
+            artifactId project.name
+            version project.version
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username getenv('MAVEN_USER')
+                password getenv('MAVEN_PASSWORD')
+            }
+            url getenv('MAVEN_URL')
+        }
+    }
+}
+
+bintray {
+    user = getenv('BINTRAY_USER')
+    key = getenv('BINTRAY_KEY')
+    publications = ['JavaArtifacts']
+    publish = true
+    pkg {
+        repo = 'opensource'
+        name = 'elasticsearch-batch-percolator'
+        userOrg = 'meltwater'
+        licenses = ['MIT']
+        vcsUrl = "https://github.com/meltwater/${project.name}"
+        version {
+            gpg{
+                sign = true
+            }
+            released  = new Date()
+        }
+    }
+}
+
+
+task ('wrapper', type:Wrapper) {
+    gradleVersion = '3.1'
+}
+
+test{
+    jvmArgs '-Xmx1G', '-XX:MaxPermSize=512M', '-XX:-UseSplitVerifier'
+}
+
+
+

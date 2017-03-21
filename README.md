@@ -14,14 +14,14 @@ For more information, see [this blog post](http://underthehood.meltwater.com/blo
 
 ## Installation
 
-    elasticsearch/bin/plugin -u file:///{path-to-repo}/elasticsearch-batch-percolator/artifact/elasticsearch-batch-percolator-1.0.1.zip --install elasticsearch-batch-percolator
+    elasticsearch/bin/plugin --install elasticsearch-batch-percolator -u "http://jcenter.bintray.com/com/meltwater/elasticsearch-batch-percolator/1.0.1/elasticsearch-batch-percolator-1.0.1.zip"
 
 Version matrix:
 
     ┌─────────────────────────────────────────┬──────────────────────────┐
     │ Elasticsearch batch percolator          │ ElasticSearch            │
     ├─────────────────────────────────────────┼──────────────────────────┤
-    │ 1.0.x                                   │ 1.7.0 ─► 1.7.1           │
+    │ 1.x.x                                   │ 1.7.0 ─► 1.7.6           │
     └─────────────────────────────────────────┴──────────────────────────┘
 
 
