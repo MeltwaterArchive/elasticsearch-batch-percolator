@@ -15,7 +15,7 @@ For more information, see [this blog post](http://underthehood.meltwater.com/blo
 
 ## Installation
 
-    elasticsearch/bin/plugin --install elasticsearch-batch-percolator -u "https://dl.bintray.com/meltwater/elasticsearch-batch-percolator/com/meltwater/elasticsearch-batch-percolator/1.0.1/elasticsearch-batch-percolator-1.0.1.zip"
+    elasticsearch/bin/plugin --install elasticsearch-batch-percolator -u "https://dl.bintray.com/meltwater/elasticsearch-batch-percolator/com/meltwater/elasticsearch-batch-percolator/1.1.2/elasticsearch-batch-percolator-1.1.2.zip"
 
 Version matrix:
 
