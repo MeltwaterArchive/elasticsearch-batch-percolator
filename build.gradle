@@ -106,7 +106,7 @@ bintray {
     publications = ['JavaArtifacts']
     publish = true
     pkg {
-        repo = 'opensource'
+        repo = 'elasticsearch-batch-percolator'
         name = 'elasticsearch-batch-percolator'
         userOrg = 'meltwater'
         licenses = ['Apache 2.0']
