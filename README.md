@@ -1,7 +1,8 @@
-[![Build Status](https://travis-ci.org/meltwater/elasticsearch-batch-percolator.svg?branch=master)](https://travis-ci.org/meltwater/elasticsearch-batch-percolator)
-
 Elasticsearch batch percolator
 ============================
+
+[![Build Status](https://travis-ci.org/meltwater/elasticsearch-batch-percolator.svg?branch=master)](https://travis-ci.org/meltwater/elasticsearch-batch-percolator)
+[ ![Download](https://api.bintray.com/packages/meltwater/elasticsearch-batch-percolator/elasticsearch-batch-percolator/images/download.svg) ](https://bintray.com/meltwater/elasticsearch-batch-percolator/elasticsearch-batch-percolator/_latestVersion)
 
 The batch percolator is a fork of the official elasticsearch [percolator](https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/percolate.html). 
 It's highly optimized for large volume percolation with complex Lucene queries like wildcards, spans and phrases.
@@ -14,7 +15,7 @@ For more information, see [this blog post](http://underthehood.meltwater.com/blo
 
 ## Installation
 
-    elasticsearch/bin/plugin --install elasticsearch-batch-percolator -u "http://jcenter.bintray.com/com/meltwater/elasticsearch-batch-percolator/1.0.1/elasticsearch-batch-percolator-1.0.1.zip"
+    elasticsearch/bin/plugin --install elasticsearch-batch-percolator -u "https://dl.bintray.com/meltwater/elasticsearch-batch-percolator/com/meltwater/elasticsearch-batch-percolator/1.0.1/elasticsearch-batch-percolator-1.0.1.zip"
 
 Version matrix:
 
