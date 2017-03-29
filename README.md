@@ -138,12 +138,6 @@ aggregations on matching queries. You should consider this plugin to be 'vanilla
 were removed because they cannot be supported in batch-mode. Some have been removed to reduce the complexity of 
 the code.
 
-## Release
-The project is hosted at jCenter and builds are uploaded by our Jenkins server. If you are a project maintainer with the necessary credentials, you can build a release locally by running:
-
-    ./gradlew clean build bintray
-
-
 
 
 
