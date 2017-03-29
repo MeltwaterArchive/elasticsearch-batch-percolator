@@ -9,7 +9,6 @@ apply plugin: "maven-publish"
 apply plugin: 'com.jfrog.bintray'
 
 group = 'com.meltwater'
-version = project_version
 sourceCompatibility = 1.7
 
 project.group = 'com.meltwater'
