@@ -1,3 +1,9 @@
+# Deprecation Warning
+
+Our Elasticsearch stack has evolved, so we are not actually using this component anymore.
+Therefore it has been deprecated and is no longer actively maintained by Meltwater.
+
+
 Elasticsearch batch percolator
 ============================
 
